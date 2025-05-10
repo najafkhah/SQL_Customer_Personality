@@ -1,3 +1,9 @@
+
+-- Customer Personality Analysis
+-- This script defines domains, creates tables, and loads customer data for  analysis.
+-- It includes customer demographics, purchasing behavior, campaign engagement, and metadata.
+
+
 ======================
 -- Domain definitions
 
@@ -137,4 +143,43 @@ VALUES
   (5524, FALSE, FALSE, TRUE, FALSE, FALSE),
   (2174, FALSE, FALSE, FALSE, TRUE, FALSE);
 
-  
+==================================
+-- This view summarises total spending per customer by combining all product category purchases.
+-- It joins the customers and purchases tables and calculates total_spent for each customer.
+
+  CREATE VIEW customer_spending_summary AS
+SELECT 
+  c.id AS customer_id,
+  c.education,
+  c.marital_status,
+  p.mnt_wines + p.mnt_fruits + p.mnt_meat_products +
+  p.mnt_fish_products + p.mnt_sweet_products + p.mnt_gold_prods AS total_spent
+FROM customers c
+JOIN purchases p ON c.id = p.customer_id;
+
+=======================================
+-- This query retrieves the top 5 most engaged customers based on their total number of purchases.
+
+SELECT 
+  customer_id,
+  num_web_purchases + num_catalog_purchases + num_store_purchases AS total_purchases
+FROM engagement
+ORDER BY total_purchases DESC
+LIMIT 5;
+
+========================================
+-- This query calculates the average total spending by marital status.
+-- It uses a CTE (total_spending) to sum all purchase categories per customer,
+-- then groups the results by marital status and returns the average spending per group, rounded to 2 decimal places.
+
+WITH total_spending AS (
+  SELECT 
+    c.marital_status,
+    p.mnt_wines + p.mnt_fruits + p.mnt_meat_products + 
+    p.mnt_fish_products + p.mnt_sweet_products + p.mnt_gold_prods AS total
+  FROM customers c
+  JOIN purchases p ON c.id = p.customer_id
+)
+SELECT marital_status, ROUND(AVG(total), 2) AS avg_spending
+FROM total_spending
+GROUP BY marital_status;
