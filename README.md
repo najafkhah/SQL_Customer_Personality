@@ -1,3 +1,9 @@
+-- Domain definitions
+CREATE DOMAIN ShortString AS VARCHAR(16);
+CREATE DOMAIN MediumString AS VARCHAR(64);
+CREATE DOMAIN LongString AS VARCHAR(256);
+
+-- Table to store basic customer demographics
 CREATE TABLE customers (
   id INT PRIMARY KEY,
   year_birth INT,
@@ -9,6 +15,7 @@ CREATE TABLE customers (
   dt_customer DATE
 );
 
+-- Table to store purchase information
 CREATE TABLE purchases (
   customer_id INT,
   mnt_wines INT,
@@ -20,6 +27,7 @@ CREATE TABLE purchases (
   FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
+-- Table to store engagement information
 CREATE TABLE engagement (
   customer_id INT,
   recency INT,
@@ -33,6 +41,7 @@ CREATE TABLE engagement (
   FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
+-- Table to store campaign information
 CREATE TABLE campaign_acceptance (
   customer_id INT,
   accepted_cmp1 BOOLEAN,
@@ -43,9 +52,16 @@ CREATE TABLE campaign_acceptance (
   FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
+-- Table to store metadata information
 CREATE TABLE metadata (
   customer_id INT,
   z_cost_contact INT,
   z_revenue INT,
   FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
+
+COPY customers(id, year_birth, education, marital_status, income, kidhome, teenhome, dt_customer)
+FROM 'C:/Users/n10652388/OneDrive - Queensland University of Technology/CV/Work/Github/customer-segmentation-sql/data/marketing_data.csv'
+DELIMITER ','
+CSV HEADER;
+
