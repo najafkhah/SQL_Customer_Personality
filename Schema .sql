@@ -2,18 +2,9 @@
 -- This script defines domains, creates tables, and loads customer data for  analysis.
 -- It includes customer demographics, purchasing behavior, campaign engagement, and metadata.
 
-
-
--- Domain definitions
-
-DROP Type IF EXISTS ShortString;
-DROP Type IF EXISTS MediumString;
-DROP Type IF EXISTS LongString;
-
-CREATE TYPE ShortString FROM VARCHAR(16) NOT NULL;
-CREATE TYPE MediumString FROM VARCHAR(64) NOT NULL;
-CREATE TYPE LongString FROM VARCHAR(256) NOT NULL;
-
+-- Define domain type for short strings
+DROP DOMAIN IF EXISTS ShortString;
+CREATE DOMAIN ShortString AS VARCHAR(16);
 
 -- DROP TABLES IF EXIST
 
